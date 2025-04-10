@@ -1,1077 +1,1541 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ระบบจัดการสินค้า | เสี่ยกาน ธนาคารกรุงเทพ</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>⚡️ เติมตลอด ปอด วิเศษ 🏁</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-  </head>
-  <body>
-    <!-- Login Overlay -->
-    <div class="login-overlay" id="loginOverlay">
-      <div class="login-container">
-        <div class="login-header">
-          <div class="login-logo-container">
-            <svg
-              class="login-logo"
-              width="120"
-              height="120"
-              viewBox="0 0 120 120"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="60"
-                cy="60"
-                r="55"
-                fill="#f5f5f5"
-                stroke="#ff9800"
-                stroke-width="3"
-              />
-              <path d="M35 40h50v10H35z" fill="#ff9800" />
-              <path d="M35 55h50v10H35z" fill="#ff9800" />
-              <path d="M35 70h50v10H35z" fill="#ff9800" />
-              <path
-                d="M90 40L85 35H35l-5 5v40l5 5h50l5-5V40z"
-                fill="none"
-                stroke="#ff9800"
-                stroke-width="2"
-              />
-            </svg>
-          </div>
-          <h2>เสี่ยกาน แท่นปั้ม หมากยาง</h2>
-        </div>
-        <div class="login-body">
-          <p class="login-message">กรุณาใส่รหัส PIN เพื่อเข้าสู่ระบบ</p>
-          <div class="pin-display">
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-          </div>
-          <div class="pin-error" id="pinError"></div>
-          <div class="pin-keypad">
-            <button class="pin-key" data-key="1">1</button>
-            <button class="pin-key" data-key="2">2</button>
-            <button class="pin-key" data-key="3">3</button>
-            <button class="pin-key" data-key="4">4</button>
-            <button class="pin-key" data-key="5">5</button>
-            <button class="pin-key" data-key="6">6</button>
-            <button class="pin-key" data-key="7">7</button>
-            <button class="pin-key" data-key="8">8</button>
-            <button class="pin-key" data-key="9">9</button>
-            <button class="pin-key pin-key-clear" data-key="clear">ลบ</button>
-            <button class="pin-key" data-key="0">0</button>
-            <button class="pin-key pin-key-enter" data-key="enter">ตกลง</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="app-container" style="display: none">
-      <!-- Header Section -->
-      <header class="app-header">
-        <div class="header-left">
-          <img
-            src="https://www.truemoney.com/wp-content/uploads/2022/01/truemoney-wallet-logo.png"
-            alt="สงกรานต์ ธนาคารกรุงเทพ"
-            class="logo"
-          />
-          <span class="logo-text">เสี่ยกาน แท่นปั้ม หมากยาง</span>
-        </div>
-        <div class="header-right">
-          <div class="notification-badge" id="notificationBadge">
-            <i class="fas fa-bell"></i>
-            <span class="badge">3</span>
-          </div>
-          <i class="fas fa-gear"></i>
-        </div>
-      </header>
-
-      <!-- Balance Section -->
-      <section class="balance-section">
-        <div class="balance-container">
-          <p class="balance-label">ยอดขายรวม</p>
-          <h2 class="balance-amount">฿125,000.00</h2>
-          <div class="action-buttons">
-            <button class="add-money-btn">เพิ่มการขาย</button>
-            <button class="history-btn"><i class="fas fa-history"></i></button>
-          </div>
-        </div>
-        <div class="stats-row">
-          <div class="stat-item">
-            <span class="stat-value">32</span>
-            <span class="stat-label">รายการวันนี้</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">+12.5%</span>
-            <span class="stat-label">เทียบเดือนก่อน</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">85</span>
-            <span class="stat-label">สินค้าทั้งหมด</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Quick Actions -->
-      <section class="quick-actions">
-        <div class="action-item" id="scanBtn">
-          <div class="action-icon"><i class="fas fa-barcode"></i></div>
-          <p>สแกนสินค้า</p>
-        </div>
-        <div class="action-item" id="calculateBtn">
-          <div class="action-icon"><i class="fas fa-calculator"></i></div>
-          <p>คำนวณราคา</p>
-        </div>
-        <div class="action-item" id="stockBtn">
-          <div class="action-icon"><i class="fas fa-boxes"></i></div>
-          <p>สต็อค</p>
-        </div>
-        <div class="action-item" id="salesBtn">
-          <div class="action-icon"><i class="fas fa-chart-line"></i></div>
-          <p>ยอดขาย</p>
-        </div>
-        <div class="action-item" id="callBtn">
-          <div class="action-icon"><i class="fas fa-phone-alt"></i></div>
-          <p>โทรศัพท์</p>
-        </div>
-      </section>
-
-      <!-- Services Section -->
-      <section class="services-section">
-        <div class="section-header">
-          <h3 class="section-title">จัดการสินค้า</h3>
-          <span class="view-all" id="viewAllProducts"
-            >ดูทั้งหมด <i class="fas fa-chevron-right"></i
-          ></span>
-        </div>
-        <div class="services-grid">
-          <div class="service-item" id="addProductBtn">
-            <div class="service-icon"><i class="fas fa-box"></i></div>
-            <p>เพิ่มสินค้า</p>
-          </div>
-          <div class="service-item" id="editProductBtn">
-            <div class="service-icon"><i class="fas fa-edit"></i></div>
-            <p>แก้ไขสินค้า</p>
-          </div>
-          <div class="service-item" id="searchProductBtn">
-            <div class="service-icon"><i class="fas fa-search"></i></div>
-            <p>ค้นหา</p>
-          </div>
-          <div class="service-item" id="categoriesBtn">
-            <div class="service-icon"><i class="fas fa-tags"></i></div>
-            <p>หมวดหมู่</p>
-          </div>
-          <div class="service-item" id="shippingBtn">
-            <div class="service-icon"><i class="fas fa-truck"></i></div>
-            <p>ขนส่ง</p>
-          </div>
-          <div class="service-item" id="reportsBtn">
-            <div class="service-icon"><i class="fas fa-file-invoice"></i></div>
-            <p>รายงาน</p>
-          </div>
-          <div class="service-item" id="promotionsBtn">
-            <div class="service-icon"><i class="fas fa-percent"></i></div>
-            <p>โปรโมชั่น</p>
-          </div>
-          <div class="service-item" id="settingsBtn">
-            <div class="service-icon"><i class="fas fa-cog"></i></div>
-            <p>ตั้งค่า</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Recent Products -->
-      <section class="transactions-section">
-        <div class="section-header">
-          <h3 class="section-title">สินค้าล่าสุด</h3>
-          <span class="view-all"
-            >ดูทั้งหมด <i class="fas fa-chevron-right"></i
-          ></span>
-        </div>
-        <div class="transactions-list" id="productList">
-          <div class="transaction-item" data-id="1">
-            <div class="transaction-icon">
-              <i class="fas fa-box"></i>
-            </div>
-            <div class="transaction-details">
-              <p class="transaction-title">เสื้อยืด Cotton 100%</p>
-              <p class="transaction-date">
-                คงเหลือ: <span class="stock-count">45</span> ชิ้น
-              </p>
-            </div>
-            <p class="transaction-amount deposit">฿350.00</p>
-          </div>
-          <div class="transaction-item" data-id="2">
-            <div class="transaction-icon">
-              <i class="fas fa-box"></i>
-            </div>
-            <div class="transaction-details">
-              <p class="transaction-title">กางเกงยีนส์ขายาว</p>
-              <p class="transaction-date">
-                คงเหลือ: <span class="stock-count">20</span> ชิ้น
-              </p>
-            </div>
-            <p class="transaction-amount deposit">฿890.00</p>
-          </div>
-          <div class="transaction-item" data-id="3">
-            <div class="transaction-icon">
-              <i class="fas fa-box"></i>
-            </div>
-            <div class="transaction-details">
-              <p class="transaction-title">รองเท้าผ้าใบ</p>
-              <p class="transaction-date">
-                คงเหลือ: <span class="stock-count low-stock">15</span> คู่
-              </p>
-            </div>
-            <p class="transaction-amount deposit">฿1,200.00</p>
-          </div>
-          <div class="transaction-item" data-id="4">
-            <div class="transaction-icon">
-              <i class="fas fa-box"></i>
-            </div>
-            <div class="transaction-details">
-              <p class="transaction-title">กระเป๋าสะพาย</p>
-              <p class="transaction-date">
-                คงเหลือ: <span class="stock-count low-stock">8</span> ใบ
-              </p>
-            </div>
-            <p class="transaction-amount deposit">฿750.00</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Bottom Navigation -->
-      <nav class="bottom-nav">
-        <div class="nav-item active" id="homeNav">
-          <i class="fas fa-home"></i>
-          <p>หน้าหลัก</p>
-        </div>
-        <div class="nav-item" id="productsNav">
-          <i class="fas fa-boxes-stacked"></i>
-          <p>สินค้า</p>
-        </div>
-        <div class="nav-item" id="scanNav">
-          <i class="fas fa-barcode"></i>
-          <p>สแกน</p>
-        </div>
-        <div class="nav-item" id="reportsNav">
-          <i class="fas fa-chart-simple"></i>
-          <p>รายงาน</p>
-        </div>
-        <div class="nav-item" id="accountNav">
-          <i class="fas fa-user"></i>
-          <p>บัญชี</p>
-        </div>
-      </nav>
-    </div>
-
-    <!-- Call Modal -->
-    <div class="modal" id="callModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>โทรภายในแอพ</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="call-container">
-            <div class="recent-calls">
-              <h4>รายชื่อผู้ใช้งานออนไลน์</h4>
-              <div class="contact-list">
-                <div class="contact-item">
-                  <i class="fas fa-user-circle"></i>
-                  <div class="contact-details">
-                    <h4>คุณ ผู้จัดการร้าน</h4>
-                    <p><span class="online-status active"></span> ออนไลน์</p>
-                  </div>
-                  <i class="fas fa-phone-alt call-icon"></i>
-                </div>
-                <div class="contact-item">
-                  <i class="fas fa-user-circle"></i>
-                  <div class="contact-details">
-                    <h4>คุณ พนักงานขาย 1</h4>
-                    <p><span class="online-status active"></span> ออนไลน์</p>
-                  </div>
-                  <i class="fas fa-phone-alt call-icon"></i>
-                </div>
-                <div class="contact-item">
-                  <i class="fas fa-user-circle"></i>
-                  <div class="contact-details">
-                    <h4>คุณ พนักงานขาย 2</h4>
-                    <p><span class="online-status"></span> ไม่ออนไลน์</p>
-                  </div>
-                  <i class="fas fa-phone-alt call-icon disabled"></i>
-                </div>
-                <div class="contact-item">
-                  <i class="fas fa-user-circle"></i>
-                  <div class="contact-details">
-                    <h4>คุณ ฝ่ายคลังสินค้า</h4>
-                    <p><span class="online-status active"></span> ออนไลน์</p>
-                  </div>
-                  <i class="fas fa-phone-alt call-icon"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Call In Progress Modal -->
-    <div class="modal" id="callInProgressModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>กำลังโทรภายในแอพ</h3>
-        </div>
-        <div class="modal-body">
-          <div class="call-in-progress">
-            <div class="caller-avatar">
-              <i class="fas fa-user-circle"></i>
-            </div>
-            <h3 id="callerName">ชื่อผู้ใช้</h3>
-            <p id="callStatus">กำลังเชื่อมต่อ...</p>
-            <div class="call-duration" id="callDuration">00:00</div>
-            <div class="call-controls">
-              <button class="btn-call-control" id="muteBtn">
-                <i class="fas fa-microphone-slash"></i>
-                <span>ปิดเสียง</span>
-              </button>
-              <button class="btn-call-control" id="speakerBtn">
-                <i class="fas fa-volume-up"></i>
-                <span>ลำโพง</span>
-              </button>
-              <button class="btn-call-control" id="videoBtn">
-                <i class="fas fa-video"></i>
-                <span>วิดีโอ</span>
-              </button>
-              <button class="btn-end-call-lg" id="endCallInProgressBtn">
-                <i class="fas fa-phone-slash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal" id="productModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>รายละเอียดสินค้า</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="product-image">
-            <i class="fas fa-box product-placeholder"></i>
-          </div>
-          <div class="product-info">
-            <h4 id="modalProductName">ชื่อสินค้า</h4>
-            <p>รหัสสินค้า: <span id="modalProductId">000</span></p>
-            <p>ราคา: <span id="modalProductPrice">฿0.00</span></p>
-            <p>คงเหลือ: <span id="modalProductStock">0</span> ชิ้น</p>
-            <p>หมวดหมู่: <span id="modalProductCategory">ทั่วไป</span></p>
-          </div>
-          <div class="product-actions">
-            <button class="btn-edit"><i class="fas fa-edit"></i> แก้ไข</button>
-            <button class="btn-delete"><i class="fas fa-trash"></i> ลบ</button>
-            <button class="btn-addstock">
-              <i class="fas fa-plus"></i> เพิ่มสต็อค
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Add Product Modal -->
-    <div class="modal" id="addProductModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>เพิ่มสินค้าใหม่</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <form id="addProductForm">
-            <div class="form-group">
-              <label for="productName">ชื่อสินค้า</label>
-              <input type="text" id="productName" required />
-            </div>
-            <div class="form-group">
-              <label for="productPrice">ราคา (บาท)</label>
-              <input
-                type="number"
-                id="productPrice"
-                min="0"
-                step="0.01"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="productStock">จำนวนสต็อค</label>
-              <input type="number" id="productStock" min="0" required />
-            </div>
-            <div class="form-group">
-              <label for="productCategory">หมวดหมู่</label>
-              <select id="productCategory">
-                <option value="เสื้อผ้า">เสื้อผ้า</option>
-                <option value="รองเท้า">รองเท้า</option>
-                <option value="กระเป๋า">กระเป๋า</option>
-                <option value="อุปกรณ์อิเล็กทรอนิกส์">
-                  อุปกรณ์อิเล็กทรอนิกส์
-                </option>
-                <option value="อื่นๆ">อื่นๆ</option>
-              </select>
-            </div>
-            <button type="submit" class="btn-submit">บันทึก</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search Modal -->
-    <div class="modal" id="searchModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>ค้นหาสินค้า</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="search-container">
-            <div class="form-group">
-              <input
-                type="text"
-                id="searchInput"
-                placeholder="ค้นหาตามชื่อสินค้า หรือรหัส"
-              />
-              <button class="search-btn"><i class="fas fa-search"></i></button>
-            </div>
-            <div class="search-filters">
-              <label> <input type="checkbox" checked /> สินค้าทั้งหมด </label>
-              <label>
-                <input type="checkbox" checked /> แสดงเฉพาะสินค้าในสต็อค
-              </label>
-            </div>
-          </div>
-          <div class="search-results" id="searchResults">
-            <!-- Search results will appear here -->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Categories Modal -->
-    <div class="modal" id="categoriesModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>หมวดหมู่สินค้า</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="category-list">
-            <div class="category-item">
-              <span class="category-name">เสื้อผ้า</span>
-              <span class="category-count">12 รายการ</span>
-            </div>
-            <div class="category-item">
-              <span class="category-name">รองเท้า</span>
-              <span class="category-count">8 รายการ</span>
-            </div>
-            <div class="category-item">
-              <span class="category-name">กระเป๋า</span>
-              <span class="category-count">5 รายการ</span>
-            </div>
-            <div class="category-item">
-              <span class="category-name">อุปกรณ์อิเล็กทรอนิกส์</span>
-              <span class="category-count">10 รายการ</span>
-            </div>
-            <div class="category-item">
-              <span class="category-name">อื่นๆ</span>
-              <span class="category-count">3 รายการ</span>
-            </div>
-          </div>
-          <div class="category-actions">
-            <button class="btn-add-category">
-              <i class="fas fa-plus"></i> เพิ่มหมวดหมู่
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Shipping Modal -->
-    <div class="modal" id="shippingModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>จัดการขนส่ง</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="shipping-options">
-            <div class="shipping-item">
-              <div class="shipping-icon"><i class="fas fa-truck"></i></div>
-              <div class="shipping-details">
-                <h4>Kerry Express</h4>
-                <p>ค่าส่ง: ฿50.00 - ฿80.00</p>
-              </div>
-              <div class="shipping-action">
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-            <div class="shipping-item">
-              <div class="shipping-icon"><i class="fas fa-truck"></i></div>
-              <div class="shipping-details">
-                <h4>Flash Express</h4>
-                <p>ค่าส่ง: ฿45.00 - ฿75.00</p>
-              </div>
-              <div class="shipping-action">
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-            <div class="shipping-item">
-              <div class="shipping-icon"><i class="fas fa-truck"></i></div>
-              <div class="shipping-details">
-                <h4>Thailand Post</h4>
-                <p>ค่าส่ง: ฿35.00 - ฿70.00</p>
-              </div>
-              <div class="shipping-action">
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-          <button class="btn-submit mt-10">บันทึกการตั้งค่า</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reports Modal -->
-    <div class="modal" id="reportsModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>รายงาน</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="reports-list">
-            <div class="report-item" data-report="sales">
-              <div class="report-icon"><i class="fas fa-chart-line"></i></div>
-              <div class="report-details">
-                <h4>รายงานยอดขาย</h4>
-                <p>ดูรายงานยอดขายตามช่วงเวลา</p>
-              </div>
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="report-item" data-report="inventory">
-              <div class="report-icon"><i class="fas fa-boxes"></i></div>
-              <div class="report-details">
-                <h4>รายงานสินค้าคงเหลือ</h4>
-                <p>ตรวจสอบสินค้าและสต็อค</p>
-              </div>
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="report-item" data-report="popular">
-              <div class="report-icon"><i class="fas fa-star"></i></div>
-              <div class="report-details">
-                <h4>สินค้าขายดี</h4>
-                <p>รายการสินค้าที่ขายดีที่สุด</p>
-              </div>
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="report-item" data-report="revenue">
-              <div class="report-icon">
-                <i class="fas fa-money-bill-wave"></i>
-              </div>
-              <div class="report-details">
-                <h4>รายงานรายได้</h4>
-                <p>รายได้และกำไรจากการขาย</p>
-              </div>
-              <i class="fas fa-chevron-right"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Promotions Modal -->
-    <div class="modal" id="promotionsModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>โปรโมชั่น</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="promotion-list">
-            <div class="promotion-item active">
-              <div class="promotion-status">
-                <span class="status active">กำลังใช้งาน</span>
-              </div>
-              <h4>ซื้อ 1 แถม 1</h4>
-              <p>สำหรับเสื้อยืด Cotton 100%</p>
-              <p class="promotion-dates">01/02/2023 - 28/02/2023</p>
-            </div>
-            <div class="promotion-item">
-              <div class="promotion-status">
-                <span class="status">ไม่ได้ใช้งาน</span>
-              </div>
-              <h4>ลด 20% ทุกรายการ</h4>
-              <p>สำหรับสมาชิกใหม่</p>
-              <p class="promotion-dates">เริ่มต้น: 01/03/2023</p>
-            </div>
-          </div>
-          <button class="btn-add-promotion">
-            <i class="fas fa-plus"></i> เพิ่มโปรโมชั่นใหม่
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div class="modal" id="settingsModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>ตั้งค่า</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="settings-list">
-            <div class="settings-section">
-              <h4 class="settings-title">การแสดงผล</h4>
-              <div class="setting-item">
-                <span>ธีมสีมืด</span>
-                <label class="switch">
-                  <input type="checkbox" />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <div class="setting-item">
-                <span>แสดงสินค้าที่ขายดีบนหน้าแรก</span>
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-            <div class="settings-section">
-              <h4 class="settings-title">แจ้งเตือน</h4>
-              <div class="setting-item">
-                <span>แจ้งเตือนเมื่อสินค้าใกล้หมด</span>
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <div class="setting-item">
-                <span>แจ้งเตือนยอดขายประจำวัน</span>
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-            <div class="settings-section">
-              <h4 class="settings-title">ความปลอดภัย</h4>
-              <div class="setting-item">
-                <span>ยืนยันด้วยรหัส PIN ก่อนลบข้อมูล</span>
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <div class="setting-item" id="changePinBtn">
-                <span>เปลี่ยนรหัส PIN</span>
-                <button class="btn-small">แก้ไข</button>
-              </div>
-            </div>
-          </div>
-          <button class="btn-submit mt-10">บันทึกการตั้งค่า</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Change PIN Modal -->
-    <div class="modal" id="changePinModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>เปลี่ยนรหัส PIN</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="pin-change-container">
-            <div class="form-group">
-              <label for="currentPin">รหัส PIN ปัจจุบัน</label>
-              <input
-                type="password"
-                id="currentPin"
-                maxlength="6"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                placeholder="******"
-              />
-            </div>
-            <div class="form-group">
-              <label for="newPin">รหัส PIN ใหม่ (6 หลัก)</label>
-              <input
-                type="password"
-                id="newPin"
-                maxlength="6"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                placeholder="******"
-              />
-            </div>
-            <div class="form-group">
-              <label for="confirmPin">ยืนยันรหัส PIN ใหม่</label>
-              <input
-                type="password"
-                id="confirmPin"
-                maxlength="6"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                placeholder="******"
-              />
-            </div>
-            <div class="pin-change-error" id="pinChangeError"></div>
-            <button class="btn-submit" id="savePinBtn">บันทึกรหัส PIN</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- First Time PIN Setup Modal -->
-    <div class="modal" id="setupPinModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>ตั้งค่ารหัส PIN</h3>
-        </div>
-        <div class="modal-body">
-          <div class="pin-setup-container">
-            <p>กรุณาตั้งรหัส PIN 6 หลักสำหรับล็อคอินเข้าใช้งานระบบ</p>
-            <div class="form-group">
-              <label for="setupPin">รหัส PIN (6 หลัก)</label>
-              <input
-                type="password"
-                id="setupPin"
-                maxlength="6"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                placeholder="******"
-              />
-            </div>
-            <div class="form-group">
-              <label for="confirmSetupPin">ยืนยันรหัส PIN</label>
-              <input
-                type="password"
-                id="confirmSetupPin"
-                maxlength="6"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                placeholder="******"
-              />
-            </div>
-            <div class="pin-setup-error" id="pinSetupError"></div>
-            <button class="btn-submit" id="saveSetupPinBtn">
-              บันทึกรหัส PIN
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Account Modal -->
-    <div class="modal" id="accountModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>บัญชีผู้ใช้</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="account-profile">
-            <div class="profile-image">
-              <i class="fas fa-user-circle"></i>
-            </div>
-            <h4>คุณ ผู้ดูแลร้าน</h4>
-            <p class="user-email">admin@mystore.com</p>
-          </div>
-          <div class="account-menu">
-            <div class="account-menu-item">
-              <i class="fas fa-user-edit"></i>
-              <span>แก้ไขข้อมูลส่วนตัว</span>
-            </div>
-            <div class="account-menu-item">
-              <i class="fas fa-store"></i>
-              <span>ข้อมูลร้านค้า</span>
-            </div>
-            <div class="account-menu-item">
-              <i class="fas fa-shield-alt"></i>
-              <span>ความปลอดภัย</span>
-            </div>
-            <div class="account-menu-item">
-              <i class="fas fa-question-circle"></i>
-              <span>ช่วยเหลือ</span>
-            </div>
-            <div class="account-menu-item logout" id="logoutBtn">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>ออกจากระบบ</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- All Products Modal -->
-    <div class="modal fullscreen" id="allProductsModal">
-      <div class="modal-content">
-        <div class="modal-header sticky">
-          <h3>รายการสินค้าทั้งหมด</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="filter-bar">
-            <div class="filter-item">
-              <select id="categoryFilter">
-                <option value="">ทุกหมวดหมู่</option>
-                <option value="เสื้อผ้า">เสื้อผ้า</option>
-                <option value="รองเท้า">รองเท้า</option>
-                <option value="กระเป๋า">กระเป๋า</option>
-                <option value="อุปกรณ์อิเล็กทรอนิกส์">
-                  อุปกรณ์อิเล็กทรอนิกส์
-                </option>
-              </select>
-            </div>
-            <div class="filter-item">
-              <select id="sortFilter">
-                <option value="newest">ล่าสุด</option>
-                <option value="price-asc">ราคา: ต่ำ-สูง</option>
-                <option value="price-desc">ราคา: สูง-ต่ำ</option>
-                <option value="stock-asc">สต็อค: น้อย-มาก</option>
-              </select>
-            </div>
-          </div>
-          <div class="product-grid" id="allProductsList">
-            <!-- Product items will be added here by JavaScript -->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Confirmation Modal (for delete confirmations) -->
-    <div class="confirm-action" id="confirmActionModal">
-      <div class="confirm-box">
-        <h4 class="confirm-title" id="confirmTitle">ยืนยันการลบ</h4>
-        <p class="confirm-message" id="confirmMessage">
-          คุณต้องการดำเนินการนี้ใช่หรือไม่?
-        </p>
-        <div class="confirm-buttons">
-          <button class="btn-cancel" id="cancelActionBtn">ยกเลิก</button>
-          <button class="btn-confirm" id="confirmActionBtn">ยืนยัน</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Notifications Modal -->
-    <div class="modal" id="notificationsModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>การแจ้งเตือน</h3>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="notification-list">
-            <div class="notification-item new">
-              <i class="fas fa-bell"></i>
-              <div class="notification-details">
-                <h4>ออเดอร์ใหม่</h4>
-                <p>มีการสั่งซื้อสินค้า 2 รายการ</p>
-              </div>
-            </div>
-            <div class="notification-item">
-              <i class="fas fa-info-circle"></i>
-              <div class="notification-details">
-                <h4>แจ้งเตือนระบบ</h4>
-                <p>ระบบอัพเดทเวอร์ชันล่าสุดแล้ว</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="script.js"></script>
-    <script>
-      function showNotification(msg) {
-        // Placeholder for advanced notification logic
-        alert(msg);
+    <style>
+      :root {
+        --primary: #424242;
+        --primary-dark: #212121;
+        --success: #2e7d32;
+        --danger: #c62828;
+        --warning: #f57f17;
+        --accent: #03a9f4;
+        --bg: linear-gradient(135deg, #303030 0%, #1a1a1a 100%);
+        --card-bg: #424242;
+        --text: #f5f5f5;
+        --text-light: #e0e0e0;
+        --border: #616161;
+        --input-bg: #303030;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       }
 
-      function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-          modal.style.display = "block";
+      [data-theme="dark"] {
+        --primary: #757575;
+        --primary-dark: #424242;
+        --success: #388e3c;
+        --danger: #d32f2f;
+        --warning: #ffa000;
+        --accent: #29b6f6;
+        --bg: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+        --card-bg: #121212;
+        --text: #f5f5f5;
+        --text-light: #bdbdbd;
+        --border: #424242;
+        --input-bg: #1a1a1a;
+        --shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      }
+
+      * {
+        box-sizing: border-box;
+        transition: background-color 0.3s ease, color 0.3s ease,
+          border-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      html {
+        font-size: 16px; /* Base font size for rem calculations */
+      }
+
+      body {
+        font-family: "Sarabun", "Inter", "Segoe UI", sans-serif;
+        padding: clamp(0.5rem, 5vw, 2rem);
+        background: var(--bg);
+        background-size: 300% 300%;
+        animation: gradientBG 30s ease infinite;
+        color: var(--text);
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(0.875rem, 2vw, 1rem);
+        line-height: 1.5;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
         }
       }
 
-      document.getElementById("addProductBtn").addEventListener("click", () => {
-        showNotification("เพิ่มสินค้าใหม่เรียบร้อยแล้ว");
-      });
-      document
-        .getElementById("editProductBtn")
-        .addEventListener("click", () => {
-          showNotification("แก้ไขสินค้าเรียบร้อยแล้ว");
-        });
-      document
-        .getElementById("searchProductBtn")
-        .addEventListener("click", () => {
-          showNotification("ค้นหาสินค้า...");
-          openModal("searchModal");
-        });
-      document.getElementById("categoriesBtn").addEventListener("click", () => {
-        showNotification("เปิดหมวดหมู่");
-        openModal("categoriesModal");
-      });
-      document.getElementById("shippingBtn").addEventListener("click", () => {
-        showNotification("ตั้งค่าการขนส่ง");
-        openModal("shippingModal");
-      });
-      document.getElementById("reportsBtn").addEventListener("click", () => {
-        showNotification("เปิดรายงาน");
-        openModal("reportsModal");
-      });
-      document.getElementById("promotionsBtn").addEventListener("click", () => {
-        showNotification("จัดการโปรโมชั่น");
-        openModal("promotionsModal");
-      });
-      document.getElementById("settingsBtn").addEventListener("click", () => {
-        showNotification("เปิดการตั้งค่า");
-        openModal("settingsModal");
-      });
-      document.getElementById("accountNav").addEventListener("click", () => {
-        showNotification("จัดการบัญชี");
-        openModal("accountModal");
-      });
-      document.getElementById("scanBtn").addEventListener("click", () => {
-        showNotification("สแกนสินค้า...");
-      });
-      document.getElementById("calculateBtn").addEventListener("click", () => {
-        showNotification("คำนวณราคา...");
-      });
-      document.getElementById("stockBtn").addEventListener("click", () => {
-        showNotification("ตรวจสอบสต็อค...");
-      });
-      document.getElementById("salesBtn").addEventListener("click", () => {
-        showNotification("ดูยอดขาย...");
-      });
-      document
-        .getElementById("viewAllProducts")
-        .addEventListener("click", () => {
-          showNotification("แสดงสินค้าทั้งหมด");
-          openModal("allProductsModal");
-        });
+      .card {
+        width: 100%;
+        max-width: clamp(280px, 90vw, 700px);
+        padding: clamp(1rem, 4vw, 2.5rem);
+        background: var(--card-bg);
+        border-radius: clamp(12px, 3vw, 16px);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        margin: 0.5rem;
+      }
 
-      // Call functionality
-      document.getElementById("callBtn").addEventListener("click", () => {
-        showNotification("เปิดการโทรภายในแอพ");
-        openModal("callModal");
-      });
+      h2 {
+        margin-top: 0;
+        font-weight: 700;
+        font-size: clamp(1.25rem, 5vw, 1.75rem);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: clamp(0.4rem, 2vw, 0.8rem);
+        flex-wrap: wrap;
+      }
 
-      // Contact list call
-      const contactCallIcons = document.querySelectorAll(
-        ".contact-item .call-icon:not(.disabled)"
-      );
-      contactCallIcons.forEach((icon) => {
-        icon.addEventListener("click", (e) => {
-          const contactDetails = e.currentTarget
-            .closest(".contact-item")
-            .querySelector(".contact-details");
-          const contactName = contactDetails.querySelector("h4").textContent;
+      h2 i {
+        color: var(--accent);
+      }
 
-          document.getElementById("callerName").textContent = contactName;
-          document.getElementById("callModal").style.display = "none";
-          openModal("callInProgressModal");
+      .theme-toggle {
+        margin-left: auto;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 1.25rem;
+        cursor: pointer;
+        width: auto;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: background-color 0.3s, transform 0.3s;
+      }
 
-          // Simulate connecting
-          document.getElementById("callStatus").textContent =
-            "กำลังเชื่อมต่อ...";
+      label {
+        display: block;
+        margin: 1rem 0 0.3rem;
+        font-weight: 500;
+        color: var(--text);
+      }
 
-          // Simulate call being picked up after 2 seconds
-          setTimeout(() => {
-            document.getElementById("callStatus").textContent = "กำลังสนทนา";
+      .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
 
-            // Start call timer
-            let seconds = 0;
-            const callTimer = setInterval(() => {
-              seconds++;
-              const minutes = Math.floor(seconds / 60);
-              const remainingSeconds = seconds % 60;
-              document.getElementById("callDuration").textContent = `${minutes
-                .toString()
-                .padStart(2, "0")}:${remainingSeconds
-                .toString()
-                .padStart(2, "0")}`;
-            }, 1000);
+      input,
+      button,
+      textarea,
+      select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        margin: 0.3rem 0 1rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-size: 1rem;
+        background: var(--input-bg);
+        color: var(--text);
+        outline: none;
+        transition: all 0.3s ease;
+      }
 
-            window.currentCallTimer = callTimer;
-          }, 2000);
-        });
-      });
+      input:focus,
+      textarea:focus,
+      select:focus {
+        box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.3);
+        border-color: var(--accent);
+      }
 
-      // Add new video button functionality
-      document
-        .getElementById("videoBtn")
-        .addEventListener("click", function () {
-          this.classList.toggle("active");
-          showNotification(
-            this.classList.contains("active")
-              ? "เปิดวิดีโอแล้ว"
-              : "ปิดวิดีโอแล้ว"
-          );
-        });
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23bdbdbd%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+        padding-right: 2.5rem;
+      }
 
-      document
-        .getElementById("endCallInProgressBtn")
-        .addEventListener("click", () => {
-          document.getElementById("callInProgressModal").style.display = "none";
-          showNotification("สิ้นสุดการโทร");
+      input[type="file"] {
+        padding: 0.6rem;
+        background: var(--input-bg);
+        border: 2px dashed var(--border);
+        cursor: pointer;
+      }
 
-          // Clear timer
-          if (window.currentCallTimer) {
-            clearInterval(window.currentCallTimer);
-          }
-        });
-
-      document.getElementById("muteBtn").addEventListener("click", function () {
-        this.classList.toggle("active");
-        showNotification(
-          this.classList.contains("active")
-            ? "ปิดไมโครโฟนแล้ว"
-            : "เปิดไมโครโฟนแล้ว"
+      button {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
         );
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        height: 48px;
+        margin-top: 1rem;
+        position: relative;
+        overflow: hidden;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark) 0%,
+          var(--primary) 100%
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      button.loading {
+        pointer-events: none;
+        opacity: 0.8;
+      }
+
+      button .spinner {
+        display: none;
+        animation: spin 1s linear infinite;
+      }
+
+      button.loading .text {
+        display: none;
+      }
+
+      button.loading .spinner {
+        display: inline-block;
+      }
+
+      #log {
+        white-space: pre-wrap;
+        background: var(--input-bg);
+        padding: 1rem;
+        border-radius: 12px;
+        font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+        max-height: 300px;
+        overflow-y: auto;
+        font-size: 0.9rem;
+        color: var(--text);
+        border: 1px solid var(--border);
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      /* Log entries with improved styling */
+      #log .log-entry {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        animation: fadeIn 0.3s ease-out forwards;
+        opacity: 0;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #log .log-entry i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 1.1rem;
+      }
+
+      #log .log-entry-text {
+        flex-grow: 1;
+      }
+
+      #log .log-entry.success {
+        background: rgba(46, 125, 50, 0.2);
+        border-left: 4px solid var(--success);
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+
+      #log .log-entry.error {
+        background: rgba(198, 40, 40, 0.2);
+        border-left: 4px solid var(--danger);
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+
+      #log .log-entry.info {
+        background: rgba(3, 169, 244, 0.15);
+        border-left: 4px solid var(--accent);
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+
+      #log .log-entry.warning {
+        background: rgba(245, 127, 23, 0.2);
+        border-left: 4px solid var(--warning);
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+
+      .notification-box {
+        padding: 15px;
+        border-radius: 12px;
+        margin: 15px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        animation: slideIn 0.5s ease forwards;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .status-check-btn {
+        background: linear-gradient(135deg, var(--success) 0%, #1b5e20 100%);
+        margin: 15px 0;
+        height: 44px;
+        font-size: 0.95rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border-radius: 12px;
+      }
+
+      .troubleshoot-list {
+        margin-top: 12px;
+        padding-left: 0;
+        list-style-type: none;
+      }
+
+      .troubleshoot-list li {
+        margin-bottom: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        position: relative;
+      }
+
+      .troubleshoot-list li::before {
+        content: counter(item);
+        counter-increment: item;
+        background: var(--accent);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+
+      .site-url-display {
+        display: flex;
+        align-items: center;
+        background: var(--input-bg);
+        padding: 12px 15px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin: 12px 0;
+        gap: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .site-url-display:hover {
+        border-color: var(--accent);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .site-url-display a {
+        flex-grow: 1;
+        color: var(--accent);
+        text-decoration: none;
+        word-break: break-all;
+        transition: color 0.3s;
+      }
+
+      .site-url-display a:hover {
+        color: var(--text);
+        text-decoration: underline;
+      }
+
+      .project-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      .project-info-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .project-info-item i {
+        width: 20px;
+        text-align: center;
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .success {
+        color: var(--success);
+      }
+      .error {
+        color: var(--danger);
+      }
+      .hidden {
+        display: none;
+      }
+
+      .save-credentials {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin: 0.8rem 0;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px 15px;
+        border-radius: 8px;
+      }
+
+      .save-credentials input {
+        width: auto;
+        margin: 0;
+        accent-color: var(--accent);
+        transform: scale(1.2);
+      }
+
+      .dropzone {
+        border: 2px dashed var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        text-align: center;
+        background: var(--input-bg);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .dropzone::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(3, 169, 244, 0.1) 0%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        opacity: 0;
+        transition: opacity 0.5s;
+      }
+
+      .dropzone:hover {
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .dropzone:hover::before {
+        opacity: 1;
+      }
+
+      .dropzone i {
+        font-size: 3rem;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        display: block;
+        transition: transform 0.3s;
+      }
+
+      .dropzone:hover i {
+        transform: scale(1.1);
+      }
+
+      .dropzone p {
+        font-size: 1.1rem;
+        margin-top: 0;
+      }
+
+      .one-click-deploy {
+        margin-top: 2rem;
+        height: 56px;
+        font-size: 1.2rem;
+        background: linear-gradient(135deg, var(--accent) 0%, #0277bd 100%);
+      }
+
+      .one-click-deploy:hover {
+        background: linear-gradient(135deg, #0277bd 0%, var(--accent) 100%);
+      }
+
+      .border-accent {
+        border-color: var(--accent) !important;
+      }
+
+      .file-list {
+        background: var(--input-bg);
+        border-radius: 12px;
+        padding: 12px;
+        margin-top: 18px;
+        border: 1px solid var(--border);
+        max-height: 120px;
+        overflow-y: auto;
+      }
+
+      .file-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        border-bottom: 1px solid var(--border);
+        animation: fadeIn 0.3s ease forwards;
+      }
+
+      .file-item:last-child {
+        border-bottom: none;
+      }
+
+      .file-icon {
+        margin-right: 10px;
+        color: var(--accent);
+      }
+
+      .copy-btn {
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        margin-left: 10px;
+        height: auto;
+        transition: all 0.2s ease;
+      }
+
+      .copy-btn:hover {
+        background: #0277bd;
+        transform: translateY(-1px);
+      }
+
+      .history-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--input-bg);
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      .history-item:hover {
+        border-color: var(--accent);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .history-item .site-info {
+        flex: 1;
+      }
+
+      .history-item .site-name {
+        font-weight: bold;
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+
+      .history-item .site-url {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin: 4px 0;
+      }
+
+      .history-item .site-date {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        opacity: 0.8;
+      }
+
+      .history-item .actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .history-item .btn {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        border: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: auto;
+        margin: 0;
+      }
+
+      .history-item .update-btn {
+        background: var(--accent);
+      }
+
+      .history-item .visit-btn {
+        background: var(--success);
+      }
+
+      .tabbed-section {
+        margin-top: 1.5rem;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        color: var(--text-light);
+        border-radius: 8px 8px 0 0;
+      }
+
+      .tab:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      .tab.active {
+        color: var(--accent);
+        border-bottom: 3px solid var(--accent);
+        font-weight: 600;
+      }
+
+      .tab-content {
+        display: none;
+        animation: fadeContent 0.3s ease forwards;
+      }
+
+      @keyframes fadeContent {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      #deploy-mode-select {
+        margin-bottom: 1.5rem;
+      }
+
+      #toggle-log-btn {
+        margin: 1rem 0;
+        cursor: pointer;
+        display: inline-flex;
+        color: var(--text);
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+
+      #toggle-log-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--accent);
+      }
+
+      #log.hidden {
+        display: none;
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transform: translateX(150%);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        z-index: 1000;
+        max-width: 350px;
+      }
+
+      .toast.show {
+        transform: translateX(0);
+      }
+
+      .toast.success {
+        border-left: 5px solid var(--success);
+      }
+
+      .toast.error {
+        border-left: 5px solid var(--danger);
+      }
+
+      .toast i {
+        font-size: 1.5rem;
+      }
+
+      .toast-content {
+        flex: 1;
+      }
+
+      .toast-title {
+        font-weight: bold;
+        margin-bottom: 3px;
+      }
+
+      .toast-close {
+        background: transparent;
+        border: none;
+        color: var(--text-light);
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 5px;
+        margin: 0;
+        height: auto;
+      }
+
+      /* Enhanced responsive styles */
+      @media (max-width: 480px) {
+        html {
+          font-size: 14px;
+        }
+
+        .card {
+          padding: 1rem;
+          border-radius: 12px;
+        }
+
+        h2 {
+          font-size: 1.2rem;
+          margin-bottom: 1rem;
+        }
+
+        .tabs {
+          flex-wrap: wrap;
+          gap: 2px;
+        }
+
+        .tab {
+          flex: 1 0 auto;
+          padding: 8px 10px;
+          font-size: 0.85rem;
+          text-align: center;
+        }
+
+        .dropzone {
+          padding: 1.5rem 1rem;
+        }
+
+        .dropzone i {
+          font-size: 2rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .dropzone p {
+          font-size: 0.9rem;
+        }
+
+        .input-group {
+          margin-bottom: 1rem;
+        }
+
+        input,
+        button,
+        textarea,
+        select {
+          padding: 0.7rem;
+          font-size: 0.9rem;
+        }
+
+        .toast {
+          max-width: 85vw;
+          left: 50%;
+          transform: translateX(-50%) translateY(-100%);
+          right: auto;
+        }
+
+        .toast.show {
+          transform: translateX(-50%) translateY(0);
+        }
+
+        #toggle-log-btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .save-credentials {
+          padding: 8px 10px;
+        }
+
+        .save-credentials input {
+          transform: scale(1);
+        }
+      }
+
+      @media (min-width: 481px) and (max-width: 768px) {
+        .card {
+          padding: 1.5rem;
+          max-width: 90vw;
+        }
+
+        .tab {
+          padding: 8px 12px;
+        }
+
+        .dropzone i {
+          font-size: 2.5rem;
+        }
+
+        .history-item {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .history-item .actions {
+          width: 100%;
+          margin-top: 10px;
+          justify-content: space-between;
+        }
+
+        .site-url-display {
+          flex-wrap: wrap;
+        }
+
+        .site-url-display a {
+          width: 100%;
+          margin-bottom: 8px;
+        }
+
+        .copy-btn {
+          margin-left: 0;
+        }
+      }
+
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .card {
+          max-width: 90vw;
+        }
+
+        .history-item .actions {
+          gap: 5px;
+        }
+      }
+
+      @media (min-width: 1025px) {
+        .card {
+          max-width: 700px;
+        }
+      }
+
+      /* Touch device optimizations */
+      @media (pointer: coarse) {
+        .tab,
+        button,
+        .theme-toggle,
+        .copy-btn,
+        .toast-close,
+        #toggle-log-btn {
+          min-height: 44px;
+          min-width: 44px;
+        }
+
+        input,
+        select,
+        textarea {
+          font-size: 16px; /* Prevents iOS zoom on focus */
+          min-height: 44px;
+        }
+
+        .save-credentials {
+          min-height: 44px;
+        }
+
+        button {
+          height: 56px;
+        }
+
+        #toggle-password {
+          padding: 10px;
+          right: 5px;
+        }
+      }
+
+      /* For landscape orientation on mobile */
+      @media (max-height: 480px) and (orientation: landscape) {
+        body {
+          align-items: flex-start;
+          padding: 0.5rem;
+        }
+
+        .card {
+          margin-top: 0;
+          margin-bottom: 0;
+          max-height: 85vh;
+          overflow-y: auto;
+        }
+
+        #log {
+          max-height: 150px;
+        }
+
+        .dropzone {
+          padding: 1rem;
+        }
+
+        .dropzone i {
+          font-size: 1.5rem;
+          margin-bottom: 0.3rem;
+        }
+
+        .one-click-deploy {
+          height: 48px;
+          margin-top: 1rem;
+        }
+      }
+
+      /* For high-density displays */
+      @media screen and (min-width: 1600px) {
+        html {
+          font-size: 18px;
+        }
+
+        .card {
+          max-width: 900px;
+          padding: 3rem;
+        }
+      }
+
+      /* Print styles */
+      @media print {
+        .card {
+          box-shadow: none;
+          border: 1px solid #ccc;
+        }
+
+        .theme-toggle,
+        button:not(.copy-btn),
+        .tabs,
+        #toggle-log-btn {
+          display: none;
+        }
+
+        body {
+          background: white;
+          padding: 0;
+        }
+
+        .card {
+          max-width: 100%;
+        }
+      }
+
+      /* Ensure buttons and interactive elements have proper focus states for accessibility */
+      button:focus,
+      input:focus,
+      select:focus,
+      .tab:focus,
+      .theme-toggle:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Reduce motion for users who prefer it */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+
+        .dropzone:hover i {
+          transform: none;
+        }
+
+        .history-item:hover {
+          transform: none;
+        }
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--input-bg);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
+      }
+    </style>
+  </head>
+  <body class="thai-font">
+    <div class="card">
+      <h2>
+        <i class="fas fa-rocket"></i> เติมตลอด ปอดวิเศษ
+        <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม">
+          <i class="fas fa-moon"></i>
+        </button>
+      </h2>
+
+      <div class="tabbed-section">
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('new-tab')">
+            <i class="fas fa-plus-circle"></i> สร้างเว็บใหม่
+          </div>
+          <div class="tab" onclick="switchTab('history-tab')">
+            <i class="fas fa-history"></i> ประวัติของฉัน
+          </div>
+          <div class="tab" onclick="switchTab('practice-tab')">
+            <i class="fas fa-book"></i> คู่มือการใช้งาน
+          </div>
+        </div>
+
+        <div id="new-tab" class="tab-content active">
+          <select
+            id="deploy-mode-select"
+            class="hidden"
+            onchange="toggleDeployMode(this.value)"
+          >
+            <option value="new">สร้างเว็บไซต์ใหม่</option>
+            <option value="update">อัพเดทเว็บไซต์เดิม</option>
+          </select>
+
+          <div
+            class="dropzone"
+            id="dropzone"
+            onclick="document.getElementById('fileInput').click()"
+          >
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>ลากวางไฟล์ HTML, CSS, JS ที่นี่<br />หรือคลิกเพื่อเลือกไฟล์</p>
+            <input
+              id="fileInput"
+              type="file"
+              multiple
+              class="hidden"
+              onchange="handleFiles(this.files)"
+            />
+          </div>
+        </div>
+
+        <div id="history-tab" class="tab-content">
+          <h3><i class="fas fa-history"></i> ประวัติการสร้างเว็บไซต์</h3>
+          <div id="history-list">
+            <p>ยังไม่มีประวัติการสร้างเว็บไซต์</p>
+          </div>
+        </div>
+
+        <div id="practice-tab" class="tab-content">
+          <h3><i class="fas fa-book"></i> คู่มือการใช้งาน</h3>
+          <p>นี่คือส่วนแนะนำการใช้งานอย่างย่อ:</p>
+          <div
+            style="
+              background: rgba(3, 169, 244, 0.1);
+              padding: 15px;
+              border-radius: 12px;
+              margin: 15px 0;
+            "
+          >
+            <h4><i class="fas fa-list-ol"></i> ขั้นตอนการใช้งาน</h4>
+            <ol style="padding-left: 20px">
+              <li>อัพโหลดไฟล์ที่ต้องการผ่านหน้าต่าง "สร้างเว็บใหม่"</li>
+              <li>
+                กรอกข้อมูล GitHub ของคุณ (ต้องมี Personal Access Token
+                ที่มีสิทธิ์ repo)
+              </li>
+              <li>กดปุ่ม "สร้างเว็บไซต์ทันที" เพื่อ Deploy</li>
+              <li>รอประมาณ 2-5 นาที เพื่อให้ GitHub Pages ทำงานเสร็จสมบูรณ์</li>
+              <li>เข้าชมเว็บไซต์ของคุณผ่าน URL ที่แสดง</li>
+            </ol>
+
+            <h4 style="margin-top: 20px">
+              <i class="fas fa-hand-point-right"></i> คำแนะนำเพิ่มเติม
+            </h4>
+            <ul style="padding-left: 20px">
+              <li>ต้องมีไฟล์ index.html เสมอ</li>
+              <li>
+                หากพบปัญหา 404 ให้รอสักครู่ GitHub Pages อาจใช้เวลาในการอัพเดท
+              </li>
+              <li>
+                สามารถดูประวัติเว็บไซต์ที่เคยสร้างไว้ในแท็บ "ประวัติของฉัน"
+              </li>
+            </ul>
+          </div>
+          <p>ทดลองทำซ้ำหลายๆ ครั้งเพื่อสร้างความคุ้นเคย</p>
+        </div>
+      </div>
+
+      <div id="file-list-container" class="hidden">
+        <div class="file-list" id="file-list"></div>
+      </div>
+
+      <div id="auth-section" class="hidden">
+        <div class="input-group">
+          <label><i class="fas fa-user"></i> ชื่อผู้ใช้ GitHub</label>
+          <input id="username" placeholder="ชื่อผู้ใช้ของคุณ" />
+        </div>
+
+        <div class="input-group">
+          <label><i class="fas fa-key"></i> GitHub Token (มีสิทธิ์ repo)</label>
+          <div style="position: relative">
+            <input id="token" type="password" placeholder="ghp_..." />
+            <i
+              class="fas fa-eye"
+              id="toggle-password"
+              style="
+                position: absolute;
+                right: 15px;
+                top: 15px;
+                cursor: pointer;
+                color: var(--text-light);
+              "
+              onclick="togglePasswordVisibility()"
+            ></i>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label
+            ><i class="fas fa-code-branch"></i> ชื่อ Repository (ไม่ระบุ =
+            สร้างอัตโนมัติ)</label
+          >
+          <input
+            id="repoName"
+            placeholder="ชื่อ repository ของคุณ (ไม่ซ้ำกับที่มีอยู่)"
+          />
+        </div>
+
+        <div class="save-credentials">
+          <input type="checkbox" id="saveCredentials" checked />
+          <label for="saveCredentials">จดจำข้อมูลของฉัน</label>
+        </div>
+
+        <button
+          id="deployBtn"
+          class="one-click-deploy"
+          onclick="oneClickDeploy()"
+        >
+          <span class="text"
+            ><i class="fas fa-bolt"></i> สร้างเว็บไซต์ทันที</span
+          >
+          <span class="spinner"><i class="fas fa-spinner"></i></span>
+        </button>
+      </div>
+
+      <div id="toggle-log-btn" onclick="toggleLog()">
+        <i class="fas fa-terminal"></i> แสดง/ซ่อน บันทึกการทำงาน
+      </div>
+
+      <div id="log">ลากวางไฟล์เพื่อเริ่มการสร้างเว็บไซต์...</div>
+    </div>
+
+    <div id="toast" class="toast">
+      <i class="fas fa-check-circle"></i>
+      <div class="toast-content">
+        <div class="toast-title">สำเร็จ</div>
+        <div class="toast-message">การดำเนินการเสร็จสมบูรณ์</div>
+      </div>
+      <button class="toast-close" onclick="hideToast()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if dark mode is preferred
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        document.documentElement.setAttribute(
+          "data-theme",
+          prefersDark ? "dark" : "light"
+        );
+        updateThemeIcon();
+
+        const savedUsername = localStorage.getItem("gh-username");
+        const savedToken = localStorage.getItem("gh-token");
+
+        if (savedUsername && savedToken) {
+          document.getElementById("username").value = savedUsername;
+          document.getElementById("token").value = savedToken;
+
+          const autoDeploy = document.createElement("div");
+          autoDeploy.innerHTML = `
+            <button class="one-click-deploy" style="margin-top:10px; background:linear-gradient(135deg, var(--success) 0%, #1b5e20 100%);" onclick="toggleAutoDeploy()">
+              <i class="fas fa-magic"></i> ใช้งานการอัพโหลดอัตโนมัติ
+            </button>`;
+          document
+            .querySelector(".dropzone")
+            .insertAdjacentElement("afterend", autoDeploy);
+        }
+
+        const dropzone = document.getElementById("dropzone");
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+          dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        ["dragenter", "dragover"].forEach((eventName) => {
+          dropzone.addEventListener(eventName, highlight, false);
+        });
+
+        ["dragleave", "drop"].forEach((eventName) => {
+          dropzone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+          dropzone.classList.add("border-accent");
+        }
+
+        function unhighlight() {
+          dropzone.classList.remove("border-accent");
+        }
+
+        dropzone.addEventListener("drop", handleDrop, false);
+
+        if (savedUsername || savedToken) {
+          const clearBtn = document.createElement("button");
+          clearBtn.innerHTML =
+            '<i class="fas fa-trash-alt"></i> ลบข้อมูลที่บันทึกไว้';
+          clearBtn.style.background =
+            "linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%)";
+          clearBtn.style.marginTop = "15px";
+          clearBtn.style.fontSize = "0.9rem";
+          clearBtn.style.height = "40px";
+          clearBtn.onclick = function () {
+            if (confirm("คุณต้องการลบข้อมูลที่บันทึกไว้ใช่หรือไม่?")) {
+              localStorage.removeItem("gh-username");
+              localStorage.removeItem("gh-token");
+              localStorage.removeItem("auto-deploy");
+              showToast("ลบข้อมูลเรียบร้อยแล้ว", "กำลังรีเฟรชหน้า...", "error");
+              setTimeout(() => location.reload(), 1500);
+            }
+          };
+          document
+            .getElementById("log")
+            .insertAdjacentElement("afterend", clearBtn);
+        }
+
+        // แสดงประวัติการสร้างเว็บไซต์
+        loadDeploymentHistory();
+
+        // Add touchstart event listeners for buttons to improve mobile responsiveness
+        const buttons = document.querySelectorAll("button, .tab");
+        buttons.forEach((button) => {
+          button.addEventListener("touchstart", function () {
+            this.style.transform = "scale(0.97)";
+          });
+
+          button.addEventListener("touchend", function () {
+            this.style.transform = "";
+          });
+        });
+
+        // Handle screen orientation changes
+        window.addEventListener("orientationchange", function () {
+          // Brief timeout to allow the browser to update dimensions
+          setTimeout(function () {
+            adjustUIForOrientation();
+          }, 100);
+        });
+
+        // Initial orientation adjustment
+        adjustUIForOrientation();
       });
 
-      document
-        .getElementById("speakerBtn")
-        .addEventListener("click", function () {
-          this.classList.toggle("active");
-          showNotification(
-            this.classList.contains("active") ? "เปิดลำโพงแล้ว" : "ปิดลำโพงแล้ว"
-          );
+      function adjustUIForOrientation() {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const body = document.body;
+        const card = document.querySelector(".card");
+
+        if (isLandscape && window.innerHeight < 500) {
+          // Optimize for landscape on small devices
+          body.classList.add("landscape-mobile");
+          card.style.overflowY = "auto";
+
+          // Adjust log height in landscape
+          const log = document.getElementById("log");
+          if (log) log.style.maxHeight = "120px";
+        } else {
+          body.classList.remove("landscape-mobile");
+          card.style.overflowY = "";
+
+          // Reset log height
+          const log = document.getElementById("log");
+          if (log) log.style.maxHeight = "";
+        }
+      }
+
+      function togglePasswordVisibility() {
+        const input = document.getElementById("token");
+        const icon = document.getElementById("toggle-password");
+
+        if (input.type === "password") {
+          input.type = "text";
+          icon.className = "fas fa-eye-slash";
+        } else {
+          input.type = "password";
+          icon.className = "fas fa-eye";
+        }
+      }
+
+      function updateThemeIcon() {
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme");
+        const themeToggle = document.querySelector(".theme-toggle i");
+        themeToggle.className =
+          currentTheme === "light" ? "fas fa-moon" : "fas fa-sun";
+      }
+
+      function showToast(title, message, type = "success") {
+        const toast = document.getElementById("toast");
+        const toastTitle = toast.querySelector(".toast-title");
+        const toastMessage = toast.querySelector(".toast-message");
+        const icon = toast.querySelector("i:first-child");
+
+        toast.className = `toast ${type}`;
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
+
+        if (type === "success") {
+          icon.className = "fas fa-check-circle";
+        } else if (type === "error") {
+          icon.className = "fas fa-exclamation-circle";
+        }
+
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          hideToast();
+        }, 5000);
+      }
+
+      function hideToast() {
+        const toast = document.getElementById("toast");
+        toast.classList.remove("show");
+      }
+
+      function switchTab(tabId) {
+        // ซ่อนแท็บทั้งหมด
+        document.querySelectorAll(".tab-content").forEach((tab) => {
+          tab.classList.remove("active");
         });
+
+        // แสดงแท็บที่เลือก
+        document.getElementById(tabId).classList.add("active");
+
+        // ปรับสถานะปุ่มแท็บ
+        document.querySelectorAll(".tab").forEach((tabBtn) => {
+          tabBtn.classList.remove("active");
+        });
+
+        // หาปุ่มแท็บที่เลือกและทำให้มีสถานะ active
+        document
+          .querySelector(`.tab[onclick="switchTab('${tabId}')"]`)
+          .classList.add("active");
+
+        // โหลดประวัติใหม่ถ้าเป็นแท็บประวัติ
+        if (tabId === "history-tab") {
+          loadDeploymentHistory();
+        }
+      }
+
+      function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+        html.setAttribute("data-theme", newTheme);
+
+        updateThemeIcon();
+
+        // Add animation effect to body
+        document.body.style.transition = "background 0.5s ease";
+
+        showToast(
+          newTheme === "dark" ? "โหมดมืดเปิดใช้งาน" : "โหมดสว่างเปิดใช้งาน",
+          "เปลี่ยนธีมเรียบร้อยแล้ว"
+        );
+      }
+
+      function copyToClipboard(text) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            showToast("คัดลอกเรียบร้อย", "คัดลอกลิงก์เรียบร้อยแล้ว");
+          })
+          .catch((err) => {
+            showToast("เกิดข้อผิดพลาด", "ไม่สามารถคัดลอกลิงก์ได้", "error");
+          });
+      }
+
+      function toggleAutoDeploy() {
+        const currentSetting = localStorage.getItem("auto-deploy") === "true";
+        localStorage.setItem("auto-deploy", !currentSetting);
+
+        showToast(
+          !currentSetting ? "เปิดใช้งานอัตโนมัติ" : "ปิดใช้งานอัตโนมัติ",
+          !currentSetting
+            ? "ระบบจะอัพโหลดอัตโนมัติเมื่อมีการเลือกไฟล์"
+            : "ปิดการอัพโหลดอัตโนมัติแล้ว"
+        );
+
+        if (!currentSetting) {
+          document.querySelector(".dropzone").style.background =
+            "rgba(46, 125, 50, 0.1)";
+          document.querySelector(".dropzone").style.borderColor =
+            "var(--success)";
+        } else {
+          document.querySelector(".dropzone").style = "";
+        }
+      }
+
+      function appendToLog(message, icon = null, className = null) {
+        const log = document.getElementById("log");
+        const entry = document.createElement("div");
+        entry.className = "log-entry";
+
+        if (icon) {
+          const iconEl = document.createElement("i");
+          iconEl.className = icon;
+          if (className) iconEl.classList.add(className);
+          entry.appendChild(iconEl);
+        }
+
+        const textEl = document.createElement("div");
+        textEl.className = "log-entry-text";
+        if (className) textEl.classList.add(className);
+        textEl.innerHTML = message;
+        entry.appendChild(textEl);
+
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+
+        // Show log if it's hidden and there's important info
+        if (
+          log.classList.contains("hidden") &&
+          (className === "success" || className === "error")
+        ) {
+          toggleLog();
+        }
+      }
+
+      function toggleLog() {
+        const logElement = document.getElementById("log");
+        const toggleBtn = document.getElementById("toggle-log-btn");
+
+        if (logElement.classList.contains("hidden")) {
+          logElement.classList.remove("hidden");
+          toggleBtn.innerHTML =
+            '<i class="fas fa-eye-slash"></i> ซ่อนบันทึกการทำงาน';
+        } else {
+          logElement.classList.add("hidden");
+          toggleBtn.innerHTML =
+            '<i class="fas fa-terminal"></i> แสดงบันทึกการทำงาน';
+        }
+      }
     </script>
   </body>
 </html>
